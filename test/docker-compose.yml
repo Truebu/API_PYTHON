@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  quasarweb:
+    image: alvarocar/quasarstudent:1.0
+    ports: 
+      - 80:80
+    depends_on: 
+      - flaskapi
+    restart: always
+
+  flaskapi:
+    image: alvarocar/studentcrud:1.0
+    container_name: flaskapi
+    networks: 
+      - umbnet
+    environment: 
+      - MONGO_URI=mongodb://mongo:27017/student
+    ports: 
+      - 8080:8080
+    restart: always
+    depends_on: 
+      - mongo
+
+  mongo:
+    image: mongo:3.6.22
+    container_name: mongo
+    volumes:
+      - ./db:/data/db
+    networks: 
+     - umbnet
+    restart: always
+
+networks: 
+  umbnet:
+    driver: bridge

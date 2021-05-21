@@ -1,0 +1,28 @@
+version: "3.7"
+
+networks: 
+  guia_4:
+    driver: bridge
+services:
+  api:
+    container_name: python-todos-api
+    image: apiflask:1.2
+    environment:
+      - MONGO_URI=mongodb://mongo-db:27017/todos
+    depends_on:
+      - mongo
+    ports: 
+      - "5000:5000"
+    tty: true
+    networks: 
+      - guia_4
+
+  mongo:
+    container_name: mongo-db
+    image: mongo
+    volumes:
+      - "./db:/data/db"
+    networks: 
+      - guia_4
+    ports:
+      - "27017:27017"
